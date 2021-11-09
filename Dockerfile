@@ -62,7 +62,6 @@ WORKDIR /home/rstudio/
 
 RUN install2.r --error \
     --skipinstalled \
-    --ncpus $NCPUS \
     $(Rscript -e "if(file.exists('DESCRIPTION')) {pkg <- remotes:::load_pkg_description('.'); repos <- c('https://cloud.r-project.org', remotes:::parse_additional_repositories(pkg)); deps <- remotes:::local_package_deps(pkgdir = '.', dependencies = NA); write(paste0(deps[!deps %in% c('papaja')], collapse = ' '), stdout())} else write(NA, stdout())")
 
 RUN rm -f DESCRIPTION
