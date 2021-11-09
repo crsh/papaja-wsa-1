@@ -1,0 +1,16 @@
+---
+title: "R packages in Docker containers"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library("ggplot2")
+```
+
+Check out the pretty colors. 
+
+```{r}
+ggplot(faithfuld, aes(waiting, eruptions, z = density)) +
+  geom_contour_filled()
+```
+
