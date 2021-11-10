@@ -5,6 +5,8 @@
 #
 # PROJECT_NAME is the name used for the image of the current project (including
 # project-specific R packages etc.)
+#
+# Names must be lowercase.
 
 PAPAJA_BASE="papaja"
 PROJECT_NAME="papajaworkshop"
