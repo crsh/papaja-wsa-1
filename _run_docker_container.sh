@@ -27,7 +27,7 @@ TEXLIVE_VERSION="2021"
 
 # NCPUS controls the number of cores to use to install R packages in parallel
 
-NCPUS=3
+NCPUS=1
 
 
 # ------------------------------------------------------------------------------
@@ -52,13 +52,19 @@ docker build \
     --target project \
     -t $PROJECT_NAME .
 
+# Add as needed to work with git inside the container
+#
+# Share global .gitconfig with container
+#    -v ~/.gitconfig:/home/rstudio/.gitconfig:ro \
+#
+# Share SSH credentials with container
+#    -v ~/.ssh:/home/rstudio/.ssh:ro \
+
 docker run -d \
     -p 8787:8787 \
     -e DISABLE_AUTH=TRUE \
     -e ROOT=TRUE \
-    -v /$(pwd):/home/rstudio \
-#    -v ~/.ssh:/home/rstudio/.ssh:ro \
-#    -v ~/.gitconfig:/home/rstudio/.gitconfig:ro \
+    -v "/$PWD":/home/rstudio \
     --name $(echo $PROJECT_NAME | grep -o "^[a-zA-Z0-9]*") \
     --rm \
     $PROJECT_NAME
