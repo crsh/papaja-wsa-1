@@ -15,7 +15,7 @@ RUN apt-get update \
 # TeX Live
 ARG TEXLIVE_VERSION=2021
 
-RUN if $TEXLIVE_VERSION == date + "%Y"; then \
+RUN if $TEXLIVE_VERSION == date +"%Y"; then \
         CTAN_REPO=http://mirror.ctan.org/systems/texlive/tlnet; \
     else \
         CTAN_REPO=ftp://tug.org/historic/systems/texlive/$TEXLIVE_VERSION/tlnet-final; \
@@ -31,9 +31,7 @@ RUN tlmgr install \
     fancyvrb framed lineno microtype mptopdf \
     ms parskip pgf sttools threeparttable \
     threeparttablex trimspaces txfonts upquote \
-    url was xcolor
-
-RUN tlmgr install \
+    url was xcolor \
     geometry amsmath kvoptions kvsetkeys kvdefinekeys ltxcmds zapfding \
     auxhook infwarerr multirow babel-english stringenc uniquecounter  \
     epstopdf-pkg grfext bigintcalc bitset etexcmds gettitlestring \
@@ -43,7 +41,7 @@ RUN tlmgr install \
 ARG NCPUS=1
 RUN install2.r --error \
     --skipinstalled \
-    --ncpus $NCPUS\
+    --ncpus $NCPUS \
     tinytex \
     remotes \
     markdown \
@@ -60,9 +58,11 @@ FROM ${PAPAJA_BASE} as project
 COPY DESCRIPTION* /home/rstudio/
 WORKDIR /home/rstudio/
 
-RUN install2.r --error \
-    --skipinstalled \
-    $(Rscript -e "if(file.exists('DESCRIPTION')) {pkg <- remotes:::load_pkg_description('.'); repos <- c('https://cloud.r-project.org', remotes:::parse_additional_repositories(pkg)); deps <- remotes:::local_package_deps(pkgdir = '.', dependencies = NA); write(paste0(deps[!deps %in% c('papaja')], collapse = ' '), stdout())} else write(NA, stdout())")
+RUN if test -f DESCRIPTION ; then \
+        install2.r --error \
+        --skipinstalled \
+        $(Rscript -e "pkg <- remotes:::load_pkg_description('.'); repos <- c('https://cloud.r-project.org', remotes:::parse_additional_repositories(pkg)); deps <- remotes:::local_package_deps(pkgdir = '.', dependencies = NA); write(paste0(deps[!deps %in% c('papaja')], collapse = ' '), stdout())"); \
+    fi
 
 RUN rm -f DESCRIPTION
 RUN rm -rf /tmp/downloaded_packages

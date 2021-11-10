@@ -25,16 +25,13 @@ PAPAJA_VERSION="@devel"
 RSTUDIO_VERSION="2021.09.0+351"
 TEXLIVE_VERSION="2021"
 
-# Windows
-# LOCAL_IP=${LOCAL_IP:-`ipconfig.exe | grep -E -B 2 "Default Gateway(.*)[0-9]+" | grep 'IPv4 Address' | cut -d ':' -f2 | xargs`}
-
 # Mac OS (possibly Linux)
-LOCAL_IP=$(ipconfig getifaddr en0)
+# LOCAL_IP=$(ipconfig getifaddr en0)
 
 
 # ------------------------------------------------------------------------------
 
-TAG=$R_RELEASE-$(echo $PAPAJA_VERSION | grep -o "\w*$")-$(echo $RSTUDIO_VERSION | grep -o "^[0-9]*\.[0-9][0-9]")-$TEXLIVE_VERSION
+TAG="$R_RELEASE-$(echo $PAPAJA_VERSION | grep -o "\w*$")-$(echo $RSTUDIO_VERSION | grep -o "^[0-9]*\.[0-9][0-9]")-$TEXLIVE_VERSION"
 PAPAJA_BASE="papaja:$TAG"
 PROJECT_NAME="$PROJECT_NAME:$TAG"
 
@@ -56,7 +53,7 @@ docker build \
 
 docker run -d \
     -p 8787:8787 \
-    -e DISABLE_AUTH=true \
+    -e DISABLE_AUTH=TRUE \
     -e ROOT=TRUE \
     -v $(pwd):/home/rstudio \
     -v ~/.ssh:/home/rstudio/.ssh:ro \
@@ -67,4 +64,4 @@ docker run -d \
 
 sleep 1
 
-open http://$LOCAL_IP:8787
+git web--browse http://localhost:8787
