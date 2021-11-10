@@ -25,8 +25,9 @@ PAPAJA_VERSION="@devel"
 RSTUDIO_VERSION="2021.09.0+351"
 TEXLIVE_VERSION="2021"
 
-# Mac OS (possibly Linux)
-# LOCAL_IP=$(ipconfig getifaddr en0)
+# NCPUS controls the number of cores to use to install R packages in parallel
+
+NCPUS=3
 
 
 # ------------------------------------------------------------------------------
@@ -40,14 +41,14 @@ docker build \
     --build-arg RSTUDIO_VERSION=$RSTUDIO_VERSION \
     --build-arg TEXLIVE_VERSION=$TEXLIVE_VERSION \
     --build-arg PAPAJA_VERSION=$PAPAJA_VERSION \
-    --build-arg NCPUS=3 \
+    --build-arg NCPUS=$NCPUS \
     --target papaja \
     -t $PAPAJA_BASE .
 
 docker build \
     --build-arg PAPAJA_BASE=$PAPAJA_BASE \
     --build-arg PROJECT_NAME=$PROJECT_NAME \
-    --build-arg NCPUS=3 \
+    --build-arg NCPUS=$NCPUS \
     --target project \
     -t $PROJECT_NAME .
 
@@ -55,9 +56,9 @@ docker run -d \
     -p 8787:8787 \
     -e DISABLE_AUTH=TRUE \
     -e ROOT=TRUE \
-    -v $(pwd):/home/rstudio \
-    -v ~/.ssh:/home/rstudio/.ssh:ro \
-    -v ~/.gitconfig:/home/rstudio/.gitconfig:ro \
+    -v /$(pwd):/home/rstudio \
+#    -v ~/.ssh:/home/rstudio/.ssh:ro \
+#    -v ~/.gitconfig:/home/rstudio/.gitconfig:ro \
     --name $(echo $PROJECT_NAME | grep -o "^[a-zA-Z0-9]*") \
     --rm \
     $PROJECT_NAME

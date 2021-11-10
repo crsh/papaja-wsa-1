@@ -35,7 +35,8 @@ RUN tlmgr install \
     geometry amsmath kvoptions kvsetkeys kvdefinekeys ltxcmds zapfding \
     auxhook infwarerr multirow babel-english stringenc uniquecounter  \
     epstopdf-pkg grfext bigintcalc bitset etexcmds gettitlestring \
-    hycolor hyperref intcalc letltxmacro pdfescape refcount rerunfilecheck
+    hycolor hyperref intcalc letltxmacro pdfescape refcount rerunfilecheck \
+    latexdiff ulem oberdiek
 
 # Setup R packages
 ARG NCPUS=1
